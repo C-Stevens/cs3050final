@@ -34,7 +34,7 @@ void createEdge(graph* graph, int src, int dst) {
     graph->lists[dst-1].head = newNode;
 }
 
-void enqueue(queue q, visitedNode* input) {
+void enqueue(queue* q, visitedNode* input) {
     input->prev = NULL;
     input->next = q->head;
     if(q->head == NULL) { //empty queue
@@ -46,18 +46,52 @@ void enqueue(queue q, visitedNode* input) {
     }
 }
 
-visitedNode* dequeue(queue q) {
-    output = q->tail;
+visitedNode* dequeue(queue* q) {
+    visitedNode* output = q->tail;
     if(output == NULL) {
         return output; // Return NULL
     }
     q->tail = output->prev;
     q->tail->next = NULL;
+    output->prev = NULL; // Prevent leakage of the rest of the list
     return output;
 }
 
-int shortestNodeDistance(graph* graph, int dst) {
+int queueIsEmpty(queue* q) {
+    if (q->head == NULL) {
+        return 1; // True (empty)
+    }
+    return 0; // False (non-empty)
+}
+
+adjList* getAdjListForVal(graph* graph, int val) {
+    int i;
+    for(i=0; i<(graph->size); i++) {
+        adjList* currentList = graph->lists[i];
+        if(currentList->head->dst == val) {
+            return adjList;
+        }
+    }
+}
+
+void printDistancesFromOrigin(graph* graph) {
     queue* q = malloc(sizeof(queue));
+    int* visits = malloc(sizeof(int) * graph->size);
+    int* results = malloc(sizeof(int) * graph->size);
+    int i;
+    for(i=0; i<(graph->size); i++) { // Start each distance off as -1 (unreachable) and all as unvisited
+        results[i] = -1;
+        visits[i] = FALSE;
+    }
+    
+    while(queueIsEmpty(q) != 1) {
+        visitedNode* currentStruct = dequeue(q);
+        int currentVal = currentStruct->nodeVal;
+        int currentDist = currentStruct->nodeDist;
+        results[currentVal - 1] = currentDist;
+        
+        
+    }
 }
 
 // A utility function to print the adjacency list representation of graph

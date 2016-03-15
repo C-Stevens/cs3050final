@@ -10,18 +10,27 @@ int main(int argc, char** argv) {
         exit(FILE_FAILED_TO_OPEN);
     }
     
-    int test = 5; //DEBUG
-    printf("hi im just starting\n"); //DEBUG
-    graph* g = createGraph(test); //DEBUG
-    printf("made graph\n"); //DEBUG
-    createEdge(g, 2, 3);
-    createEdge(g, 1, 4);
-    createEdge(g, 1, 3);
-    createEdge(g, 3, 4);
-    createEdge(g, 4, 5);
-    printf("done making edges\n"); //DEBUG
+    int i,inputSize,count,v1,v2;
+    fscanf(input, "%d\n", &inputSize);
+    graph* g = createGraph(inputSize);
+    
+    for(i=0; i<inputSize; i++) {
+        count = fscanf(input, "(%d,%d)\n", &v1, &v2);
+        if(count == EOF) {
+            if(ferror(input)) {
+                exit(PARSING_ERROR_INVALID_CHARACTER_ENCOUNTERED);
+            }
+        } else if(count != 2) {
+            exit(PARSING_ERROR_INVALID_FORMAT);
+        }
+//         printf("\nthis many matches: %d\n", count);
+//         printf("v1: %d\nv2: %d\n", v1, v2);
+        //TODO: Check for v1/v2 not being valid vertexes, maybe more?
+        createEdge(g, v1, v2);
+    }
     printGraph(g); //DEBUG
     
+    //TODO: Free the graph
     if(fclose(input) == EOF) {
         exit(FILE_FAILED_TO_CLOSE);
     }

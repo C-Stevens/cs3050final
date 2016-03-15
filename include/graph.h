@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#define FALSE 0
+#define TRUE 1
 
 typedef struct listNode { // Individual nodes
     int dst;
@@ -21,8 +23,8 @@ typedef struct graph { // Struct containing all adjacency lists as an array
 typedef struct vistedNode {
     int nodeVal;
     int nodeDist;
-    visitedNode* prev;
-    visitedNode* next;
+    struct visitedNode* prev;
+    struct visitedNode* next;
 } visitedNode;
 
 typedef struct queue {
@@ -32,10 +34,12 @@ typedef struct queue {
 
 listNode* makeNode(int); // Creates a new listNode with dst value `dst` and returns a listNode struct
 graph* createGraph(int size); // Creates a new undirected graph, with `size` linked lists
-void createEdge(graph* graph, int src, int dst); // Adds an edge to a graph struct
-void printDistancesFromOrigin(graph* graph); // Returns shortest distance from `dst` to vertex 1
-void enqueue(queue, visitedNode*);
-visitedNode* dequeue(queue);
+void createEdge(graph*, int, int); // Adds an edge to a graph struct
+void printDistancesFromOrigin(graph*); // Returns shortest distance from `dst` to vertex 1
+void enqueue(queue*, visitedNode*);
+int queueIsEmpty(queue*);
+adjList* getAdjListForVal(graph*, int);
+visitedNode* dequeue(queue*);
 
 //DEBUG
 void printGraph(graph* graph);
