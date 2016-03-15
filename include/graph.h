@@ -23,16 +23,20 @@ typedef struct vistedNode {
     int dist;
 } visitedNode;
 
+typedef struct queueItem {
+    visitedNode* node;
+    visitedNode* next;
+} queueItem;
+
 typedef struct queue {
-    visitedNode* head;
-    visitedNode* tail;
+    queueItem* head;
+    queueItem* tail;
 } queue;
 
 listNode* makeNode(int); // Creates a new listNode with dst value `dst` and returns a listNode struct
 graph* createGraph(int size); // Creates a new undirected graph, with `size` linked lists
 void createEdge(graph* graph, int src, int dst); // Adds an edge to a graph struct
 void printDistancesFromOrigin(graph* graph); // Returns shortest distance from `dst` to vertex 1
-void createQueue;
 void enqueue(queue, visitedNode*);
 visitedNode* dequeue(queue);
 
