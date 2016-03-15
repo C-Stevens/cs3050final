@@ -35,13 +35,20 @@ void createEdge(graph* graph, int src, int dst) {
 }
 
 void enqueue(queue q, visitedNode* input) {
-    q->tail->next = input; // Insert into the end
+    input->prev = NULL;
+    if(q->head == NULL) { //empty queue
+        q->head = input;
+        q->tail = input;
+    } else {
+        input->next = q->head;
+        q->head = input;
+    }
 }
 
 visitedNode* dequeue(queue q) {
-    output = q->head;
-    q->head = q->head->next; // Shift head down one item
-    return output; // Return what used to be on top
+    output = q->tail;
+    q->tail->prev->next = NULL;
+    return output;
 }
 
 int shortestNodeDistance(graph* graph, int dst) {
