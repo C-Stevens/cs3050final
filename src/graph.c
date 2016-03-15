@@ -41,7 +41,7 @@ void printGraph(graph* graph)
     for (v = 0; v < graph->size; v++)
     {
         listNode* pCrawl = graph->lists[v].head;
-        printf("\n Adjacency list of vertex %d\n head ", v);
+        printf("\n Adjacency list of vertex %d\n head ", v+1);
         while (pCrawl)
         {
             printf("-> %d", pCrawl->dst);
