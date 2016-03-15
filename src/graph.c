@@ -25,16 +25,30 @@ graph* createGraph(int size) {
 void createEdge(graph* graph, int src, int dst) {
     // Add an edge from src to dst
     listNode* newNode = makeNode(dst);
-    newNode->next = graph->lists[src].head;
-    graph->lists[src].head = newNode;
+    newNode->next = graph->lists[src-1].head;
+    graph->lists[src-1].head = newNode;
     
     // Add an edge from dst to src
     newNode = makeNode(src);
-    newNode->next = graph->lists[dst].head;
-    graph->lists[dst].head = newNode;
+    newNode->next = graph->lists[dst-1].head;
+    graph->lists[dst-1].head = newNode;
 }
 
-// A utility function to print the adjacenncy list representation of graph
+void enqueue(queue q, visitedNode* input) {
+    q->tail->next = input; // Insert into the end
+}
+
+visitedNode* dequeue(queue q) {
+    output = q->head;
+    q->head = q->head->next; // Shift head down one item
+    return output; // Return what used to be on top
+}
+
+int shortestNodeDistance(graph* graph, int dst) {
+    queue* q = malloc(sizeof(queue));
+}
+
+// A utility function to print the adjacency list representation of graph
 void printGraph(graph* graph)
 {
     int v;

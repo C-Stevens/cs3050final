@@ -20,17 +20,14 @@ typedef struct graph { // Struct containing all adjacency lists as an array
 
 typedef struct vistedNode {
     int nodeVal;
-    int dist;
+    int nodeDist;
+    visitedNode* prev;
+    visitedNode* next;
 } visitedNode;
 
-typedef struct queueItem {
-    visitedNode* node;
-    visitedNode* next;
-} queueItem;
-
 typedef struct queue {
-    queueItem* head;
-    queueItem* tail;
+    visitedNode* head;
+    visitedNode* tail;
 } queue;
 
 listNode* makeNode(int); // Creates a new listNode with dst value `dst` and returns a listNode struct
