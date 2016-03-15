@@ -36,11 +36,11 @@ void createEdge(graph* graph, int src, int dst) {
 
 void enqueue(queue q, visitedNode* input) {
     input->prev = NULL;
+    input->next = q->head;
     if(q->head == NULL) { //empty queue
         q->head = input;
         q->tail = input;
     } else {
-        input->next = q->head;
         q->head->prev = input;
         q->head = input;
     }
@@ -48,6 +48,9 @@ void enqueue(queue q, visitedNode* input) {
 
 visitedNode* dequeue(queue q) {
     output = q->tail;
+    if(output == NULL) {
+        return output; // Return NULL
+    }
     q->tail = output->prev;
     q->tail->next = NULL;
     return output;
