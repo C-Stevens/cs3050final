@@ -41,6 +41,7 @@ void enqueue(queue q, visitedNode* input) {
         q->tail = input;
     } else {
         input->next = q->head;
+        q->head->prev = input;
         q->head = input;
     }
 }
