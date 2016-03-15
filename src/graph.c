@@ -47,7 +47,8 @@ void enqueue(queue q, visitedNode* input) {
 
 visitedNode* dequeue(queue q) {
     output = q->tail;
-    q->tail->prev->next = NULL;
+    q->tail = output->prev;
+    q->tail->next = NULL;
     return output;
 }
 
