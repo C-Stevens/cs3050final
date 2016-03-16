@@ -23,12 +23,10 @@ int main(int argc, char** argv) {
         } else if(count != 2) {
             exit(PARSING_ERROR_INVALID_FORMAT);
         }
-//         printf("\nthis many matches: %d\n", count);
-//         printf("v1: %d\nv2: %d\n", v1, v2);
         //TODO: Check for v1/v2 not being valid vertexes, maybe more?
         createEdge(g, v1, v2);
     }
-    printGraph(g); //DEBUG
+    //printGraph(g); //DEBUG
     printf("Fingers crossed\n"); //DEBUG
     printDistancesFromOrigin(g);
     printf("Fingers uncrossed\n"); //DEBUG

@@ -11,11 +11,9 @@ graph* createGraph(int size) {
     graph* newGraph = malloc(sizeof(graph));
     newGraph->size = size;
     newGraph->lists = malloc(sizeof(adjList) * size);
-    printf("\tGraph set up\n"); //DEBUG
     
     int i;
     for(i=0; i<size; i++) { // Create `size` number of empty adjacency lists at this graph struct's list array
-        printf("\tAdding a new list\n"); //DEBUG
         newGraph->lists[i].head = NULL;
     }
     
@@ -48,35 +46,26 @@ void enqueue(queue* q, visitedNode* input) {
 
 visitedNode* dequeue(queue* q) {
     printQueue(q);
-    printf("Debug 1\n");
     visitedNode* tmp = q->tail;
     if(tmp == NULL) {
         return NULL;
     }
-    if(getQueueSize(q) > 1) {
-        q->tail->next = NULL;
-    } else if(getQueueSize(q) == 1) {
-        return q->head;
+    if(q->head == q->tail) { // Queue size of 1
+        q->head = NULL;
+        q->tail = NULL;
+        return tmp;
     }
-    // Sanitize
-    tmp->prev = NULL;
-    tmp->next = NULL;
-    // Fix the queue tail
-    q->tail = q->tail->prev;
+    // Queue > 1
+    q->tail = tmp->prev;
+    tmp->prev = tmp->next = NULL; // Sanitize
     return tmp;
 }
 
-int getQueueSize(queue* q) {
-    visitedNode* cur = q->head;
-    if(cur == NULL) {
-        return 0;
+int queueIsEmpty(queue* q) {
+    if (q->head == NULL) {
+        return TRUE; // Empty
     }
-    int count = 0;
-    while(cur != NULL) {
-        count++;
-        cur=cur->next;
-    }
-    return count;
+    return FALSE; // Non-empty
 }
 
 void printQueue(queue* q) {
@@ -89,20 +78,7 @@ void printQueue(queue* q) {
     printf("NULL\n");
 }
 
-adjList* getAdjListForVal(graph* graph, int val) {
-//     adjList* aL = graph->lists;
-//     int i;
-//     for(i=0; i<(graph->size); i++) {
-//         adjList* currentList = aL[i]);
-//         if(currentList->head->dst == val) {
-//             return currentList;
-//         }
-//     }
-    return NULL;
-}
-
 void printDistancesFromOrigin(graph* graph) {
-    printf("\tInitializing\n"); //DEBUG
     // Initialize what we'll need
     queue* q = malloc(sizeof(queue));
     int* visits = malloc(sizeof(int) * graph->size);
@@ -112,9 +88,7 @@ void printDistancesFromOrigin(graph* graph) {
         results[i] = -1;
         visits[i] = FALSE;
     }
-    printf("\tDone\n"); //DEBUG
 
-    printf("\tStarting with node 1 and enqueuing\n"); //DEBUG
     // Start the queue with node 1
     visitedNode* startNode = malloc(sizeof(visitedNode));
     startNode->nodeVal = 1; // We always start at node 1 (see project docs)
@@ -122,21 +96,13 @@ void printDistancesFromOrigin(graph* graph) {
     visits[0] = TRUE; // Node 1 marked as visited (since we start there)
     results[0] = 0; // Node 1 is 0 hops away from itself
     enqueue(q, startNode);
-    printf("\tDone\n"); //DEBUG
 
-    while(getQueueSize(q) != 0) { // Run until the queue empties
-        printf("\tIn while: getting a node\n"); //DEBUG
+    while(queueIsEmpty(q) != TRUE) { // Run until the queue empties
         visitedNode* currentStruct = dequeue(q); // Pop off a node
         int currentVal = currentStruct->nodeVal;
         int currentDist = currentStruct->nodeDist;
-        printf("\tDone\n"); //DEBUG
-        printf("\tIn while: recording distance\n"); //DEBUG
         results[currentVal - 1] = currentDist; // Record its distance from node 1
-        printf("\tDone\n"); //DEBUG
 
-//        adjList* lists = graph->lists;
-//        adjList* neighbors = *(lists + currentVal);
-//        listNode* iterNode = neighbors->head;
        listNode* iterNode = graph->lists[currentVal - 1].head;
         while(iterNode != NULL) { // Iterate over the node's adjacency list
             if (visits[iterNode->dst - 1] == FALSE) { // If we haven't visited this node yet, push it on the stack
@@ -148,6 +114,11 @@ void printDistancesFromOrigin(graph* graph) {
             }
             iterNode = iterNode->next; // Move to the next neighbor
         }
+    }
+    
+    // Print results
+    for(i=0; i<(graph->size); i++) {
+        printf("%d %d\n", (i+1), results[i]);
     }
 }
 
