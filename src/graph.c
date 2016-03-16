@@ -51,24 +51,32 @@ visitedNode* dequeue(queue* q) {
     printf("Debug 1\n");
     visitedNode* tmp = q->tail;
     if(tmp == NULL) {
-        printf("Debug 1.5, returning NULL\n");
         return NULL;
-    } 
-    printf("Debug 2\n");
+    }
+    if(getQueueSize(q) > 1) {
+        q->tail->next = NULL;
+    } else if(getQueueSize(q) == 1) {
+        return q->head;
+    }
     // Sanitize
     tmp->prev = NULL;
     tmp->next = NULL;
-    printf("Debug 3\n");
     // Fix the queue tail
     q->tail = q->tail->prev;
     return tmp;
 }
 
-int queueIsEmpty(queue* q) {
-    if (q->head == NULL) {
-        return TRUE; // Empty
+int getQueueSize(queue* q) {
+    visitedNode* cur = q->head;
+    if(cur == NULL) {
+        return 0;
     }
-    return FALSE; // Non-empty
+    int count = 0;
+    while(cur != NULL) {
+        count++;
+        cur=cur->next;
+    }
+    return count;
 }
 
 void printQueue(queue* q) {
@@ -116,7 +124,7 @@ void printDistancesFromOrigin(graph* graph) {
     enqueue(q, startNode);
     printf("\tDone\n"); //DEBUG
 
-    while(queueIsEmpty(q) != 1) { // Run until the queue empties
+    while(getQueueSize(q) != 0) { // Run until the queue empties
         printf("\tIn while: getting a node\n"); //DEBUG
         visitedNode* currentStruct = dequeue(q); // Pop off a node
         int currentVal = currentStruct->nodeVal;
