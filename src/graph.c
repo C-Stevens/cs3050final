@@ -47,34 +47,49 @@ void enqueue(queue* q, visitedNode* input) {
 }
 
 visitedNode* dequeue(queue* q) {
-    visitedNode* output = q->tail;
-    if(output == NULL) {
-        return output; // Return NULL
-    }
-    q->tail = output->prev;
+    printQueue(q);
+    printf("Debug 1\n");
+    visitedNode* tmp = q->tail;
+    printf("Debug 2\n");
+    q->tail = q->tail->prev;
+    printf("Debug 3\n");
     q->tail->next = NULL;
-    output->prev = NULL; // Prevent leakage of the rest of the list
-    return output;
+    printf("Debug 4\n");
+    return tmp;
 }
 
 int queueIsEmpty(queue* q) {
     if (q->head == NULL) {
-        return 1; // True (empty)
+        return TRUE; // Empty
     }
-    return 0; // False (non-empty)
+    return FALSE; // Non-empty
+}
+
+void printQueue(queue* q) {
+    visitedNode* cur = q->head;
+    printf("Current queue: \n");
+    while(cur != NULL) {
+        printf("%d -> ", cur->nodeVal);
+        cur = cur->next;
+    }
+    printf("NULL\n");
 }
 
 adjList* getAdjListForVal(graph* graph, int val) {
-    int i;
-    for(i=0; i<(graph->size); i++) {
-        adjList* currentList = graph->lists[i];
-        if(currentList->head->dst == val) {
-            return adjList;
-        }
-    }
+//     adjList* aL = graph->lists;
+//     int i;
+//     for(i=0; i<(graph->size); i++) {
+//         adjList* currentList = aL[i]);
+//         if(currentList->head->dst == val) {
+//             return currentList;
+//         }
+//     }
+    return NULL;
 }
 
 void printDistancesFromOrigin(graph* graph) {
+    printf("\tInitializing\n"); //DEBUG
+    // Initialize what we'll need
     queue* q = malloc(sizeof(queue));
     int* visits = malloc(sizeof(int) * graph->size);
     int* results = malloc(sizeof(int) * graph->size);
@@ -83,14 +98,42 @@ void printDistancesFromOrigin(graph* graph) {
         results[i] = -1;
         visits[i] = FALSE;
     }
-    
-    while(queueIsEmpty(q) != 1) {
-        visitedNode* currentStruct = dequeue(q);
+    printf("\tDone\n"); //DEBUG
+
+    printf("\tStarting with node 1 and enqueuing\n"); //DEBUG
+    // Start the queue with node 1
+    visitedNode* startNode = malloc(sizeof(visitedNode));
+    startNode->nodeVal = 1; // We always start at node 1 (see project docs)
+    startNode->nodeDist = 0;
+    visits[0] = TRUE; // Node 1 marked as visited (since we start there)
+    results[0] = 0; // Node 1 is 0 hops away from itself
+    enqueue(q, startNode);
+    printf("\tDone\n"); //DEBUG
+
+    while(queueIsEmpty(q) != 1) { // Run until the queue empties
+        printf("\tIn while: getting a node\n"); //DEBUG
+        visitedNode* currentStruct = dequeue(q); // Pop off a node
         int currentVal = currentStruct->nodeVal;
         int currentDist = currentStruct->nodeDist;
-        results[currentVal - 1] = currentDist;
-        
-        
+        printf("\tDone\n"); //DEBUG
+        printf("\tIn while: recording distance\n"); //DEBUG
+        results[currentVal - 1] = currentDist; // Record its distance from node 1
+        printf("\tDone\n"); //DEBUG
+
+//        adjList* lists = graph->lists;
+//        adjList* neighbors = *(lists + currentVal);
+//        listNode* iterNode = neighbors->head;
+       listNode* iterNode = graph->lists[currentVal - 1].head;
+        while(iterNode != NULL) { // Iterate over the node's adjacency list
+            if (visits[iterNode->dst - 1] == FALSE) { // If we haven't visited this node yet, push it on the stack
+                visitedNode* newQueueItem = malloc(sizeof(visitedNode));
+                newQueueItem->nodeVal = iterNode->dst;
+                newQueueItem->nodeDist = currentDist + 1;
+                enqueue(q, newQueueItem);
+                visits[iterNode->dst -1] = TRUE; // Mark this node as visited so we don't re-process it
+            }
+            iterNode = iterNode->next; // Move to the next neighbor
+        }
     }
 }
 

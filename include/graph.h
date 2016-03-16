@@ -38,6 +38,7 @@ void createEdge(graph*, int, int); // Adds an edge to a graph struct
 void printDistancesFromOrigin(graph*); // Returns shortest distance from `dst` to vertex 1
 void enqueue(queue*, visitedNode*);
 int queueIsEmpty(queue*);
+void printQueue(queue*);
 adjList* getAdjListForVal(graph*, int);
 visitedNode* dequeue(queue*);
 
