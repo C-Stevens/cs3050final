@@ -29,6 +29,9 @@ int main(int argc, char** argv) {
         createEdge(g, v1, v2);
     }
     printGraph(g); //DEBUG
+    printf("Fingers crossed\n"); //DEBUG
+    printDistancesFromOrigin(g);
+    printf("Fingers uncrossed\n"); //DEBUG
     
     //TODO: Free the graph
     if(fclose(input) == EOF) {
