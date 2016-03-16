@@ -50,11 +50,17 @@ visitedNode* dequeue(queue* q) {
     printQueue(q);
     printf("Debug 1\n");
     visitedNode* tmp = q->tail;
+    if(tmp == NULL) {
+        printf("Debug 1.5, returning NULL\n");
+        return NULL;
+    } 
     printf("Debug 2\n");
-    q->tail = q->tail->prev;
+    // Sanitize
+    tmp->prev = NULL;
+    tmp->next = NULL;
     printf("Debug 3\n");
-    q->tail->next = NULL;
-    printf("Debug 4\n");
+    // Fix the queue tail
+    q->tail = q->tail->prev;
     return tmp;
 }
 
