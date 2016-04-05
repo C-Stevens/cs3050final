@@ -45,7 +45,6 @@ void enqueue(queue* q, visitedNode* input) {
 }
 
 visitedNode* dequeue(queue* q) {
-    printQueue(q);
     visitedNode* tmp = q->tail;
     if(tmp == NULL) {
         return NULL;
@@ -97,7 +96,7 @@ void printDistancesFromOrigin(graph* graph) {
     results[0] = 0; // Node 1 is 0 hops away from itself
     enqueue(q, startNode);
 
-    while(queueIsEmpty(q) != TRUE) { // Run until the queue empties
+    while(queueIsEmpty(q) != TRUE) { // Run until the queue empties (BST)
         visitedNode* currentStruct = dequeue(q); // Pop off a node
         int currentVal = currentStruct->nodeVal;
         int currentDist = currentStruct->nodeDist;
@@ -114,27 +113,17 @@ void printDistancesFromOrigin(graph* graph) {
             }
             iterNode = iterNode->next; // Move to the next neighbor
         }
+        free(currentStruct); // This will free the queue members as they are popped off
     }
     
     // Print results
     for(i=0; i<(graph->size); i++) {
-        printf("%d %d\n", (i+1), results[i]);
+        printf("%d %d\n", (i+1), results[i]); // (i+1) is to convert from index vertices to graph numberings
     }
-}
-
-// A utility function to print the adjacency list representation of graph
-void printGraph(graph* graph)
-{
-    int v;
-    for (v = 0; v < graph->size; v++)
-    {
-        listNode* pCrawl = graph->lists[v].head;
-        printf("\n Adjacency list of vertex %d\n head ", v+1);
-        while (pCrawl)
-        {
-            printf("-> %d", pCrawl->dst);
-            pCrawl = pCrawl->next;
-        }
-        printf("\n");
-    }
+    
+    // Cleanup
+    free(startNode);
+    free(visits);
+    free(results);
+    free(q);
 }

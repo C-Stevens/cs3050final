@@ -41,7 +41,4 @@ int queueIsEmpty(queue*); // Returns TRUE if queue has 0 members, FALSE otherwis
 void printQueue(queue*); // Prints out the queue at its current state, for debug
 visitedNode* dequeue(queue*); // Returns a struct visitedNode element at the tail, returns it, and removes it from the queue
 
-//DEBUG
-void printGraph(graph* graph);
-
 #endif
