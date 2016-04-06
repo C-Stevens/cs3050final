@@ -32,28 +32,15 @@ def traverseFromOne(g):
     results[0] = 0
     
     # Dijkstra
-
-def AtraverseFromOne(g):
-    # Initialize tracking stuff
-    visited = [False] * g.number_of_nodes # Tracks visitedness
-    results = [-1] * g.number_of_nodes # Tracks distance from node 1
-
-    # Set up queue and initial node
-    q = [(1, 0)] # Queue starts with node 1, 0 hops from itself
-    visited[0] = True # We've already visited node 1 (0-based array)
-    results[0] = 0 # We already know that node 1 is 0 hops away from itself (0-based array)
-
-    # BFS implementation
     while q:
-        currentAndHops = q.pop()
-        current = currentAndHops[0]
-        hops = currentAndHops[1]
-        results[current - 1] = hops
-        neighbors = g.getNeighbors(current)
-        for neighbor in neighbors:
-            if not visited[neighbor - 1]:
-                q.append((neighbor, hops + 1))
-                visited[neighbor - 1] = True
+        u = q.pop()
+        neighbors = g.getEdgesFrom(u)
+        for i in neighbors:
+            alt = results[i] + i.weight
+            if alt < results[i]:
+                results[i] = alt
+                visited[i] = True
+                # Q.decrease_priority(v, alt) ???
 
     # We're done, print results
     for i, hops in enumerate(results):
