@@ -1,13 +1,14 @@
+class edge:
+    def __init__(self, toNode, weight):
+        self.toNode = toNode
+        self.weight = weight
+
 class node:
     def __init__(self, index):
         self.index = index
-        self.weight = -1
         self.edges = []
-    def setWeight(self, weight):
-        self.weight = weight
-    def addEdge(self, index, indexWeight):
-        index.setWeight(indexWeight)
-        self.edges.append(index)
+    def addEdge(self, edge):
+        self.edges.append(edge)
 
 class graph:
     def __init__(self, number_of_nodes):
@@ -18,15 +19,21 @@ class graph:
     def getNode(self, index):
         return self.nodes[index - 1]
     def addEdge(self, fromNode, toNode, weight):
-        self.getNode(fromNode).addEdge(toNode, weight)
-        #self.getNode(toNode).addEdge(fromNode, weight) Remove because undirected graph?
-    def getNeighbors(self, index):
+        self.getNode(fromNode).addEdge(edge(self.getNode(toNode), weight))
+    def getEdgesFrom(self, index):
         return self.getNode(index).edges
 
-
-
-
 def traverseFromOne(g):
+    visited = [False] * g.number_of_nodes
+    results = [-1] * g.number_of_nodes
+    
+    q = [(1, 0)]
+    visited[0] = True
+    results[0] = 0
+    
+    # Dijkstra
+
+def AtraverseFromOne(g):
     # Initialize tracking stuff
     visited = [False] * g.number_of_nodes # Tracks visitedness
     results = [-1] * g.number_of_nodes # Tracks distance from node 1
