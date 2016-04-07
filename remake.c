@@ -57,7 +57,7 @@ void appendEdge(node* n, edge* e) {
         n->edges = malloc(sizeof(edge));
         n->number_of_edges = 1;
     } else { // Increase the edges array with realloc()
-        n->number_of_edges = n->number_of_edges++;
+        n->number_of_edges++;
         n->edges = realloc(n->edges, sizeof(edge) * n->number_of_edges);
     }
     printf("\tDEBUG # of edges: %d\n", n->number_of_edges); //DEBUG
