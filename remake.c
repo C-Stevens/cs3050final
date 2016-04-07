@@ -41,6 +41,7 @@ typedef struct minQueue {
 // End queue functions
 
 void enqueue(minQueue* q, queueItem* item);
+void dequeue(minQueue* q, queueItem* item);
 queueItem* getMin(minQueue* q);
 void setPriority(minQueue* q, int node, int priority);
 int queueIsEmpty(minQueue* q);
@@ -56,14 +57,40 @@ void enqueue(minQueue* queue, queueItem* item) {
     queue->q[queue->qSize - 1] = item;
 }
 
-queueItem* getMin(minQueue* q) {
-    
+void dequeue(minQueue* queue, queueItem* item) {
+    int i;
+    for(i=0; i<(queue->qSize); i++) {
+      if(queue->q[i] == item) { // Now we have to make a new queue and copy everything over that we want to save
+          int j;
+          for(j=i; j<(queue->qSize - 1); j++) {
+              queue->q[j] = queue->q[j+1];
+          }
+          queue->qSize--;
+          printf("\tDEBUG QSIZE: %d\n", queue->qSize);
+          queue->q = realloc(queue->q, sizeof(queueItem) * queue->qSize);
+      }
+    }
+}
+
+queueItem* getMin(minQueue* queue) {
+    if(queueIsEmpty(queue) == TRUE) {
+        return NULL;
+    }
+    queueItem* m = queue->q[0];
+    int i;
+    for(i=1; i<(queue->qSize); i++) { // i=1 to skip first member `m`
+        if(queue->q[i]->priority < m->priority && queue->q[i]->priority != -1) {
+            m = queue->q[i];
+        }
+    }
+    dequeue(queue, m);
+    return(m);
 }
 
 void setPriority(minQueue* queue, int node, int priority) {
     int i;
     for(i=0; i<queue->qSize; i++) {
-       if(queue->q[i] == node) {
+       if(queue->q[i]->node == node) {
            queue->q[i]->priority = priority;
            break;
        }
@@ -72,9 +99,9 @@ void setPriority(minQueue* queue, int node, int priority) {
 
 int queueIsEmpty(minQueue* q) {
     if(q->qSize > 0) {
-        return TRUE;
+        return FALSE;
     }
-    return FALSE;
+    return TRUE;
 }
 
 void initializeGraph(graph* g, int graphSize) {
@@ -100,7 +127,6 @@ void appendEdge(node* n, edge* e) {
         n->number_of_edges++;
         n->edges = realloc(n->edges, sizeof(edge) * n->number_of_edges);
     }
-    printf("\tDEBUG # of edges: %d\n", n->number_of_edges); //DEBUG
     n->edges[n->number_of_edges - 1] = e;
 }
 
@@ -131,6 +157,33 @@ int main(void) {
     addEdge(g, 4, 5, 1);
     printf("Done\n");
     
+    printf("\nTesting queue\n");
+    minQueue* queue = malloc(sizeof(minQueue));
+    int i;
+    for(i=0; i<(g->number_of_nodes); i++) {
+        queueItem* item = malloc(sizeof(queueItem));
+        item->node = i+1;
+        item->priority = 10;
+        enqueue(queue, item);
+    }
+    
+    printf("Queue size: %d\n", queue->qSize); 
+    if(queueIsEmpty(queue) == TRUE) {
+        printf("Queue is empty\n");
+    } else {
+        printf("Queue has members\n");
+    }
+    
+    for(i=0; i<queue->qSize; i++) {
+        dequeue(queue, queue->q[i]);
+    }
+    printf("Queue size: %d\n", queue->qSize); 
+    if(queueIsEmpty(queue) == TRUE) {
+        printf("Queue is empty\n");
+    } else {
+        printf("Queue has members\n");
+    }
+    printf("Done\n");
     // TODO: Cleanup
     free(g);
 }
