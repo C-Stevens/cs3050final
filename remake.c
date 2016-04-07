@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define TRUE 1
+#define FALSE 0
 
 typedef struct edge {
     struct node* toNode;
@@ -29,13 +31,51 @@ void initializeGraph(graph* g, int graphSize);
 
 // Queue functions
 typedef struct queueItem {
-    node* node;
+    int node;
     int priority;
 } queueItem;
 typedef struct minQueue {
-    //
+    int qSize;
+    queueItem** q;
 } minQueue;
 // End queue functions
+
+void enqueue(minQueue* q, queueItem* item);
+queueItem* getMin(minQueue* q);
+void setPriority(minQueue* q, int node, int priority);
+int queueIsEmpty(minQueue* q);
+
+void enqueue(minQueue* queue, queueItem* item) {
+    if(queue->qSize == 0) { // We need to set up a queue
+        queue->qSize = 1;
+        queue->q = malloc(sizeof(queueItem));
+    } else { // Expand the queue
+        queue->qSize++;
+        queue->q = realloc(queue->q, sizeof(queueItem) * queue->qSize);
+    }
+    queue->q[queue->qSize - 1] = item;
+}
+
+queueItem* getMin(minQueue* q) {
+    
+}
+
+void setPriority(minQueue* queue, int node, int priority) {
+    int i;
+    for(i=0; i<queue->qSize; i++) {
+       if(queue->q[i] == node) {
+           queue->q[i]->priority = priority;
+           break;
+       }
+    }
+}
+
+int queueIsEmpty(minQueue* q) {
+    if(q->qSize > 0) {
+        return TRUE;
+    }
+    return FALSE;
+}
 
 void initializeGraph(graph* g, int graphSize) {
     g->number_of_nodes = graphSize;
