@@ -9,7 +9,7 @@ typedef struct edge {
 typedef struct node {
     int index;
     int number_of_edges; // Used for edge array construction
-    edge *edges;
+    edge **edges;
 } node;
 
 typedef struct graph {
@@ -24,7 +24,7 @@ void addEdge(graph* g, int fromNode, int toNode, int weight);
 edge* getEdgesFrom(graph* g, int index);
 
 void initializeGraph(graph* g, int graphSize);
-node* createNode(int index);
+// node* createNode(int index);
 // End graph functions
 
 // Queue functions
@@ -60,7 +60,8 @@ void appendEdge(node* n, edge* e) {
         n->number_of_edges = n->number_of_edges++;
         n->edges = realloc(n->edges, sizeof(edge) * n->number_of_edges);
     }
-    n->edges[n->number_of_edges - 1] = *e;
+    printf("\tDEBUG # of edges: %d\n", n->number_of_edges); //DEBUG
+    n->edges[n->number_of_edges - 1] = e;
 }
 
 void addEdge(graph* g, int fromNode, int toNode, int weight) {
@@ -71,12 +72,12 @@ void addEdge(graph* g, int fromNode, int toNode, int weight) {
     appendEdge(n, e);
 }
 
-node* createNode(int index) {
-    node* newNode = malloc(sizeof(node));
-    newNode->index = index;
-    newNode->number_of_edges = 0;
-    return newNode;
-}
+// node* createNode(int index) {
+//     node* newNode = malloc(sizeof(node));
+//     newNode->index = index;
+//     newNode->number_of_edges = 0;
+//     return newNode;
+// }
 
 int main(void) {
     graph* g = malloc(sizeof(graph));
@@ -89,4 +90,7 @@ int main(void) {
     addEdge(g, 3, 4, 3);
     addEdge(g, 4, 5, 1);
     printf("Done\n");
+    
+    // TODO: Cleanup
+    free(g);
 }
