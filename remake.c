@@ -41,7 +41,7 @@ typedef struct minQueue {
 // End queue functions
 
 void enqueue(minQueue* q, queueItem* item);
-void dequeue(minQueue* q, queueItem* item);
+void dequeue(minQueue* q, int itemIndex);
 queueItem* getMin(minQueue* q);
 void setPriority(minQueue* q, int node, int priority);
 int queueIsEmpty(minQueue* q);
@@ -57,19 +57,18 @@ void enqueue(minQueue* queue, queueItem* item) {
     queue->q[queue->qSize - 1] = item;
 }
 
-void dequeue(minQueue* queue, queueItem* item) {
+void dequeue(minQueue* queue, int itemIndex) {
+    queueItem* newQueue = malloc(sizeof(queueItem*) * (queue->qSize - 1));
     int i;
-    for(i=0; i<(queue->qSize); i++) {
-      if(queue->q[i] == item) { // Now we have to make a new queue and copy everything over that we want to save
-          int j;
-          for(j=i; j<(queue->qSize - 1); j++) {
-              queue->q[j] = queue->q[j+1];
-          }
-          queue->qSize--;
-          printf("\tDEBUG QSIZE: %d\n", queue->qSize);
-          queue->q = realloc(queue->q, sizeof(queueItem*) * queue->qSize);
-      }
+    for(i=0; i<itemIndex; i++) { // Copy over the queue up until the break
+        newQueue[i] = queue->q[i];
     }
+    for(i=itemIndex+1; i<queue->qSize; i++) { // Copy over the queue after the break
+        newQueue[i-1] = queue->q[i]; // i-1 to avoid copying over the gap
+    }
+    queue->qSize--;
+    free(queue->q);
+    queue->q = newQueue;
 }
 
 queueItem* getMin(minQueue* queue) {
@@ -77,13 +76,15 @@ queueItem* getMin(minQueue* queue) {
         return NULL;
     }
     queueItem* m = queue->q[0];
+    int minIndex = 0;
     int i;
     for(i=1; i<(queue->qSize); i++) { // i=1 to skip first member `m`
         if(queue->q[i]->priority < m->priority && queue->q[i]->priority != -1) {
             m = queue->q[i];
+            minIndex = i;
         }
     }
-    dequeue(queue, m);
+    dequeue(queue, minIndex);
     return(m);
 }
 
