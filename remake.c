@@ -58,7 +58,16 @@ void enqueue(minQueue* queue, queueItem* item) {
 }
 
 void dequeue(minQueue* queue, int itemIndex) {
-    queueItem* newQueue = malloc(sizeof(queueItem*) * (queue->qSize - 1));
+    if(queue->q == NULL || queueIsEmpty(queue) == TRUE) { // Given an empty queue
+        return;
+    }
+    if(queue->qSize == 1) { // Queue size of one, destroy the queue
+        free(queue->q);
+        queue->q = NULL;
+        queue->qSize = 0;
+    }
+    
+    queueItem** newQueue = malloc(sizeof(queueItem*) * (queue->qSize - 1));
     int i;
     for(i=0; i<itemIndex; i++) { // Copy over the queue up until the break
         newQueue[i] = queue->q[i];
@@ -176,7 +185,7 @@ int main(void) {
     }
     
     for(i=0; i<queue->qSize; i++) {
-        dequeue(queue, queue->q[i]);
+        dequeue(queue, i);
     }
     printf("Queue size: %d\n", queue->qSize); 
     if(queueIsEmpty(queue) == TRUE) {
