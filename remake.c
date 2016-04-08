@@ -49,10 +49,10 @@ int queueIsEmpty(minQueue* q);
 void enqueue(minQueue* queue, queueItem* item) {
     if(queue->qSize == 0) { // We need to set up a queue
         queue->qSize = 1;
-        queue->q = malloc(sizeof(queueItem));
+        queue->q = malloc(sizeof(queueItem*));
     } else { // Expand the queue
         queue->qSize++;
-        queue->q = realloc(queue->q, sizeof(queueItem) * queue->qSize);
+        queue->q = realloc(queue->q, sizeof(queueItem*) * queue->qSize);
     }
     queue->q[queue->qSize - 1] = item;
 }
@@ -67,7 +67,7 @@ void dequeue(minQueue* queue, queueItem* item) {
           }
           queue->qSize--;
           printf("\tDEBUG QSIZE: %d\n", queue->qSize);
-          queue->q = realloc(queue->q, sizeof(queueItem) * queue->qSize);
+          queue->q = realloc(queue->q, sizeof(queueItem*) * queue->qSize);
       }
     }
 }
@@ -106,10 +106,10 @@ int queueIsEmpty(minQueue* q) {
 
 void initializeGraph(graph* g, int graphSize) {
     g->number_of_nodes = graphSize;
-    g->nodes = malloc(sizeof(node) * g->number_of_nodes);
+    g->nodes = malloc(sizeof(node*) * g->number_of_nodes);
     int i;
     for(i=0; i<(g->number_of_nodes); i++) {
-        node *newNode = (node*)malloc(sizeof(node));
+        node *newNode = malloc(sizeof(node*));
         newNode->index = i+1; // Graph is not 0-indexed
         g->nodes[i] = newNode;
     }
@@ -121,18 +121,18 @@ node* getNode(graph* g, int index) {
 
 void appendEdge(node* n, edge* e) {
     if(n->number_of_edges == 0) { // No edges yet
-        n->edges = malloc(sizeof(edge));
+        n->edges = malloc(sizeof(edge*));
         n->number_of_edges = 1;
     } else { // Increase the edges array with realloc()
         n->number_of_edges++;
-        n->edges = realloc(n->edges, sizeof(edge) * n->number_of_edges);
+        n->edges = realloc(n->edges, sizeof(edge*) * n->number_of_edges);
     }
     n->edges[n->number_of_edges - 1] = e;
 }
 
 void addEdge(graph* g, int fromNode, int toNode, int weight) {
     node* n = getNode(g, fromNode);
-    edge* e = malloc(sizeof(edge));
+    edge* e = malloc(sizeof(edge*));
     e->weight = weight;
     e->toNode = getNode(g, toNode);
     appendEdge(n, e);
@@ -146,7 +146,7 @@ void addEdge(graph* g, int fromNode, int toNode, int weight) {
 // }
 
 int main(void) {
-    graph* g = malloc(sizeof(graph));
+    graph* g = malloc(sizeof(graph*));
     initializeGraph(g, 6); // GRAPH SIZE 6 BURNED IN
 
     printf("Making nodes\n");
@@ -158,10 +158,10 @@ int main(void) {
     printf("Done\n");
     
     printf("\nTesting queue\n");
-    minQueue* queue = malloc(sizeof(minQueue));
+    minQueue* queue = malloc(sizeof(minQueue*));
     int i;
     for(i=0; i<(g->number_of_nodes); i++) {
-        queueItem* item = malloc(sizeof(queueItem));
+        queueItem* item = malloc(sizeof(queueItem*));
         item->node = i+1;
         item->priority = 10;
         enqueue(queue, item);
