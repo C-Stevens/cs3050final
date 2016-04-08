@@ -184,8 +184,8 @@ int main(void) {
         printf("Queue has members\n");
     }
     
-    for(i=0; i<queue->qSize; i++) {
-        dequeue(queue, i);
+    while(queueIsEmpty(queue) != FALSE) {
+        dequeue(queue, 0);
     }
     printf("Queue size: %d\n", queue->qSize); 
     if(queueIsEmpty(queue) == TRUE) {
