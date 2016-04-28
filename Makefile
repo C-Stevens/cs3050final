@@ -1,5 +1,5 @@
 CFLAGS = -g -Wall
-OUTFILE = cjsd32HW4
+OUTFILE = cjsd32FinalProj
 
 cjsd32HW4: main.o
 	gcc $(CFLAGS) main.o -o bin/$(OUTFILE)
