@@ -26,6 +26,7 @@ typedef struct mapKey {
     int r;
 } mapKey;
 
+// Trading algorithms
 tradeScheme* makeTradeScheme(int overallR, int numDays, prices* prices); // trade(r, prices)
 tradeScheme* tryTrade(tradeScheme* map, int numDays, int* prices, int day1, int day2, int r); // tryTrade(day1, day2, r)
 trade* combineTradeLists(tradeScheme* t1, tradeScheme* t2);
@@ -34,5 +35,6 @@ trade* combineTradeLists(tradeScheme* t1, tradeScheme* t2);
 tradeScheme* makeTradeMap(int numDays, int overallR);
 int getIndexOfKey(int numDays, mapKey* key);
 int isInMap(tradeScheme* map, int numDays, mapKey* key);
+void freeMapLists(tradeScheme* map, int numDays, int overallR);
 
 #endif
